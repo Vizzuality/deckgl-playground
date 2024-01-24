@@ -23,7 +23,6 @@ function App() {
   const trailLength = 50;
 
   const layers = [
-    // only needed when using shadows - a plane for shadows to drop on
     new TripsLayer({
       id: "TripsLayer",
       // data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf.trips.json',
