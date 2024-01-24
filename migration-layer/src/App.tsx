@@ -19,7 +19,7 @@ const MAP_STYLE = "https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/s
 
 function App() {
   const [time, setTime] = useState(0);
-  const duration = 2050;
+  const duration = 2500;
   const trailLength = 50;
 
   const layers = [
@@ -76,8 +76,16 @@ function App() {
 
   return (
     <main>
-      <aside className="absolute left-0 top-0 z-10 w-96 p-4">
-        <Slider defaultValue={[time]} max={2050} step={1} onValueChange={onSliderChange} />
+      <aside className="absolute left-4 top-4 z-10 w-96 bg-white p-4">
+        <div className="space-y-2">
+          <h3 className="font-semibold">Current time ({time})</h3>
+          <Slider
+            defaultValue={[time]}
+            max={duration + trailLength}
+            step={1}
+            onValueChange={onSliderChange}
+          />
+        </div>
       </aside>
 
       <DeckGL layers={[layers]} initialViewState={INITIAL_VIEW_STATE} controller={true}>
