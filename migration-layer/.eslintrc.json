@@ -6,6 +6,7 @@
   ],
   "rules": {
     "no-console": [1, { "allow": ["info", "error", "debug"] }],
+
     "import/order": [
       "warn",
       {
@@ -106,6 +107,11 @@
         "pathGroupsExcludedImportTypes": ["react"]
       }
     ]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {} // this loads <rootdir>/tsconfig.json to eslint
+    }
   },
   "overrides": [
     {
