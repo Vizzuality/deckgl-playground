@@ -25,8 +25,8 @@ function App() {
 
   // const duration = 60 * 60 * 24 * 365 * 1000;
   // const trailLength = 60 * 60 * 24 * 7 * 1000;
-  const minDate = PATH_JSON[0].timestamps[0];
-  const maxDate = PATH_JSON[0].timestamps[PATH_JSON[0].timestamps.length - 1];
+  const minDate = Math.min(...PATH_JSON.map((m) => m.timestamps[0]));
+  const maxDate = Math.max(...PATH_JSON.map((m) => m.timestamps[m.timestamps.length - 1]));
   const duration = maxDate - minDate;
 
   const layers = [

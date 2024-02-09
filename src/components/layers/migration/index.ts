@@ -33,6 +33,7 @@ export default class MigrationLayer extends CompositeLayer<MigrationLayerProps> 
           path: p.path.map((p1) => {
             return this.getRandomCoordinates(p1, p.radius);
           }),
+          // timestamps: p.timestamps,
           timestamps: p.timestamps.map((t, i) => {
             if (i === 0) return t;
             if (i === p.timestamps.length - 1) return t + 1;
