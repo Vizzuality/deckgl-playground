@@ -30,6 +30,7 @@ export default class MigrationLayer extends CompositeLayer<MigrationLayerProps> 
           id: d,
           amount: p.amount,
           radius: p.radius,
+          // path: p.path,
           path: p.path.map((p1) => {
             return this.getRandomCoordinates(p1, p.radius);
           }),
