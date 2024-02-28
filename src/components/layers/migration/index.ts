@@ -35,17 +35,7 @@ export default class MigrationLayer extends CompositeLayer<MigrationLayerProps> 
             return this.getRandomCoordinates(p1, p.radius);
           }),
           // timestamps: p.timestamps,
-          timestamps: p.timestamps.map((t, i) => {
-            if (i === 0) return t;
-            if (i === p.timestamps.length - 1) return t + 1;
-
-            const r = Math.random() * 2 - 1;
-
-            if (r < 0) {
-              return t + r * (p.timestamps[i] - p.timestamps[i - 1]);
-            }
-            return t + (Math.random() * 2 - 1) * (p.timestamps[i + 1] - p.timestamps[i]);
-          }),
+          timestamps: this.getRandomTimestamps(p.timestamps),
           color: p.color,
         })),
       )
@@ -53,21 +43,6 @@ export default class MigrationLayer extends CompositeLayer<MigrationLayerProps> 
 
     this.setState({ DATA });
   }
-
-  // updateState(
-  //   params: UpdateParameters<Layer<MigrationLayerProps & Required<CompositeLayerProps>>>,
-  // ): void {
-  //   super.updateState(params);
-
-  //   const { props, oldProps } = params;
-  //   if (props.time !== oldProps.time) {
-  //     this.setNeedsUpdate();
-  //   }
-
-  //   this._updateAttributes();
-  //   this.setNeedsRedraw();
-  //   this.setNeedsUpdate();
-  // }
 
   getRandomCoordinates(coordinates: number[], radiusInMeters: number) {
     // Earth's radius in meters
@@ -96,6 +71,36 @@ export default class MigrationLayer extends CompositeLayer<MigrationLayerProps> 
     return [resultLng, resultLat];
   }
 
+  getRandomTimestamps(timestamps: number[]) {
+    const tmpTimestamps: number[] = [];
+
+    return timestamps
+      .sort((a, b) => a - b)
+      .map((t, i, p) => {
+        if (i === 0) {
+          tmpTimestamps.push(t);
+          return t;
+        }
+        if (i === p.length - 1) {
+          tmpTimestamps.push(t);
+          return t;
+        }
+
+        // Random number between -1 and 1
+        const r = Math.random() * 2 - 1;
+
+        if (r < 0) {
+          const t1 = t + r * (p[i] - tmpTimestamps[i - 1]);
+          tmpTimestamps.push(t1);
+          return t1;
+        }
+
+        const t1 = t + r * (p[i + 1] - t);
+        tmpTimestamps.push(t1);
+        return t1;
+      });
+  }
+
   renderLayers() {
     const { DATA } = this.state;
     const { time } = this.props;
@@ -120,18 +125,30 @@ export default class MigrationLayer extends CompositeLayer<MigrationLayerProps> 
 
         getPosition: (d) => {
           const i = d.timestamps.findIndex((t) => time < t - d.timestamps[0]);
+          if (i < 0) {
+            return d.path[d.timestamps.length - 1] as Position;
+          }
           return d.path[i - 1] as Position;
         },
         getNextPosition: (d) => {
           const i = d.timestamps.findIndex((t) => time < t - d.timestamps[0]);
+          if (i < 0) {
+            return d.path[d.timestamps.length - 1] as Position;
+          }
           return d.path[i] as Position;
         },
         getTimestamp: (d) => {
           const i = d.timestamps.findIndex((t) => time < t - d.timestamps[0]);
+          if (i < 0) {
+            return d.timestamps[d.timestamps.length - 2] - d.timestamps[0];
+          }
           return d.timestamps[i - 1] - d.timestamps[0];
         },
         getNextTimestamp: (d) => {
           const i = d.timestamps.findIndex((t) => time < t - d.timestamps[0]);
+          if (i < 0) {
+            return d.timestamps[d.timestamps.length - 1] - d.timestamps[0];
+          }
           return d.timestamps[i] - d.timestamps[0];
         },
         getRandom: () => Math.random(),

@@ -11,7 +11,18 @@ import { Slider } from "@/components/ui/slider";
 import DATA_JSON from "@/data/path.json";
 const PATH_JSON = DATA_JSON.map((m) => {
   if ("data" in m) {
-    return m.data as {
+    const data = m.data as {
+      id: number | string;
+      path: number[][];
+      timestamps: number[];
+      amount: number;
+      radius: number;
+      color: number[];
+    };
+    return {
+      ...data,
+      timestamps: data.timestamps.map((t: number) => t * 1000),
+    } as {
       id: number | string;
       path: number[][];
       timestamps: number[];
@@ -50,7 +61,7 @@ function App() {
       time,
     }),
     new PathLayer({
-      visible: true,
+      visible: false,
       id: "PathLayer",
       data: PATH_JSON,
       getPath: (d) => d.path,
@@ -75,7 +86,7 @@ function App() {
       <aside className="absolute left-4 top-4 z-10 w-96 bg-white p-4">
         <div className="space-y-2">
           <h3 className="font-semibold">Current time ({date})</h3>
-          <Slider defaultValue={[time]} max={duration} step={0.1} onValueChange={onSliderChange} />
+          <Slider defaultValue={[time]} max={duration} step={0.01} onValueChange={onSliderChange} />
         </div>
       </aside>
 
