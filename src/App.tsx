@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import { PathLayer } from "@deck.gl/layers/typed";
 import { DeckGL } from "@deck.gl/react/typed";
 import Maplibregl from "maplibre-gl";
 import { Map } from "react-map-gl/maplibre";
@@ -8,7 +7,7 @@ import { Map } from "react-map-gl/maplibre";
 import MigrationLayer from "@/components/layers/migration";
 import { Slider } from "@/components/ui/slider";
 
-import DATA_JSON from "@/data/path.json";
+import DATA_JSON from "@/data/monarch.json";
 const PATH_JSON = DATA_JSON.map((m) => {
   if ("data" in m) {
     const data = m.data as {
@@ -59,17 +58,6 @@ function App() {
       id: "MigrationLayer",
       data: PATH_JSON,
       time,
-    }),
-    new PathLayer({
-      visible: false,
-      id: "PathLayer",
-      data: PATH_JSON,
-      getPath: (d) => d.path,
-      getColor: (d) => d.color,
-      getWidth: 10,
-      widthMinPixels: 1,
-      rounded: true,
-      currentTime: time,
     }),
   ];
 
